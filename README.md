@@ -1,2 +1,2 @@
-# ant
-> Ant Design Pro Vue Admin管理模板
+# ant-go
+> Ant Design Pro Vue  + Golang 后台管理基础模板
