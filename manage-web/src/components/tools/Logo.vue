@@ -18,7 +18,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: '我的记录',
+      default: '项目名称',
       required: false
     },
     showTitle: {

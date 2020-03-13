@@ -25,7 +25,7 @@ max_idle_conns = 50
 # 连接地址
 host = "127.0.0.1"
 # 连接端口
-port= 3306
+port= 3307
 # 用户名
 user = "root"
 # 密码

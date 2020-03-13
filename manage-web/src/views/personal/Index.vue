@@ -15,11 +15,11 @@
                 个人信息
               </router-link>
             </a-menu-item>
-            <!--<a-menu-item key="/personal/pwd">
+            <a-menu-item key="/personal/pwd">
               <router-link :to="{ name: 'PersonalPwd' }">
                 修改密码
               </router-link>
-            </a-menu-item>-->
+            </a-menu-item>
             <a-menu-item key="/personal/custom">
               <router-link :to="{ name: 'PersonalCustom' }">
                 个性化

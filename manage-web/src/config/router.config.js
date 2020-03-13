@@ -35,14 +35,14 @@ export const asyncRouterMap = [
             path: '/personal/base',
             name: 'PersonalBase',
             component: () => import('@/views/personal/BaseSetting'),
-            meta: { title: '个人资料', hidden: true }
+            meta: { title: '个人资料', hidden: true, keepAlive: true  }
           },
-          /* {
+          {
             path: '/personal/pwd',
             name: 'PersonalPwd',
             component: () => import('@/views/personal/Pwd'),
-            meta: { title: '修改密码', hidden: true, permission: ['user'] }
-          }, */
+            meta: { title: '修改密码', hidden: true, keepAlive: true }
+          },
           {
             path: '/personal/custom',
             name: 'PersonalCustom',
@@ -94,12 +94,6 @@ export const asyncRouterMap = [
             component: () => import('@/views/sys/dic/List'),
             meta: { title: '数据字典', hidden: true, keepAlive: true, permission: ['sysDic'] }
           }, */
-          {
-            path: '/sys/area/List',
-            name: 'SysAreaList',
-            component: () => import('@/views/sys/area/List'),
-            meta: { title: '区域管理', hidden: true, keepAlive: true, permission: ['sysArea'] }
-          },
           {
             path: '/sys/log/list',
             name: 'SysLogList',

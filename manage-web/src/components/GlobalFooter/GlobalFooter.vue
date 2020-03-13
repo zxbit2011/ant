@@ -2,7 +2,7 @@
   <div class="footer">
     <div class="copyright">
       Copyright
-      <a-icon type="copyright" /> 2019 <span>重庆韬慧实业发展有限公司</span>
+      <a-icon type="copyright" /> 2019 <span>{公司名称}</span>
     </div>
   </div>
 </template>

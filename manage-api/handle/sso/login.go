@@ -56,6 +56,7 @@ func Login(c echo.Context) error {
 	if strings.ToLower(imgCode) != global.Session(c).GetValue(global.VerificationCode) {
 		return utils.ErrorNull(c, "验证码错误")
 	}
+	global.Session(c).DelKey(global.VerificationCode)
 	var vSysUser model.VSysUser
 	if err := global.DB.First(&vSysUser, "username=?", userName).Error; err != nil && err != gorm.ErrRecordNotFound {
 		global.Log.Error("query sys_user error： %s", err.Error())
