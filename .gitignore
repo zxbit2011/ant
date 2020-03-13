@@ -1,0 +1,61 @@
+.DS_Store
+node_modules
+dist
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sw*
+*.log
+*.config
+.idea/
+
+
+# manage
+manage-web/.DS_Store
+manage-web/node_modules
+manage-web/dist
+
+# local env files
+manage-web/.env.local
+manage-web/.env.*.local
+
+# Log files
+manage-web/npm-debug.log*
+manage-web/yarn-debug.log*
+manage-web/yarn-error.log*
+manage-web-old/dist
+# Editor directories and files
+manage-web/.idea
+manage-web/.vscode
+manage-web/*.suo
+manage-web/*.ntvs*
+manage-web/*.njsproj
+manage-web/*.sw*
+
+create_model.md
+# api
+
+front-api/.idea
+front-api/.vscode
+front-web-old/front-web-old.exe
+front-web-old/page.zip
+manage-api/.idea
+manage-api/.vscode
+manage-api/config.json
+manage-api/files
+manage-api/manage-api.exe
+manage-api-old/manage-api-old.exe
+manage-api/files
