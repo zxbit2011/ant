@@ -1,3 +1,8 @@
+# 项目配置
+[project]
+# 项目名称
+name="ant-go"
+
 # http配置
 [http]
 # http监听地址

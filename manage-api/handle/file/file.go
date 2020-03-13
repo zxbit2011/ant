@@ -22,6 +22,7 @@ import (
 
 var b float64 = 1024
 
+// 单个文件上传
 func UploadFile(c echo.Context) error {
 	auth := c.Param("auth")
 	loginInfo := global.GetLoginInfo(c)
@@ -95,6 +96,7 @@ func UploadFile(c echo.Context) error {
 	})
 }
 
+//批量文件上传
 func PluploadFile(c echo.Context) error {
 	if err := c.Request().ParseMultipartForm(global.Conf.FileUpload.MaxFileSize); err != nil {
 		return utils.ErrorNull(c, fmt.Sprintf("文件过大超出限制%vmb", fmt.Sprintf("%.2f", convert.MustFloat64(global.Conf.FileUpload.MaxFileSize)/b/b)))
@@ -143,28 +145,11 @@ func PluploadFile(c echo.Context) error {
 				return utils.ErrorNull(c, "获取文件格式错误")
 			}
 
-			//格式校验
-			/*if chunk == 0 {
-				head := make([]byte, 261)
-				src, err := fileHeader.Open()
-				if err != nil {
-					return utils.ErrorNull(c, "打开文件失败")
-				}
-				defer src.Close()
+			paths := GetPath(auth, dir, filename, "", loginInfo)
 
-				_, _ = src.Read(head)
-				//格式限制判断
-				isExt := strings.Contains(fmt.Sprintf(",%v,", global.Conf.FileUpload.ExtFilter), fmt.Sprintf(",%v%v,", buf[0], buf[1]))
-				if !isExt && !filetype.IsImage(buf) && !filetype.IsVideo(buf) && !filetype.IsAudio(buf) && !filetype.IsArchive(buf) && !filetype.IsDocument(buf) {
-					return utils.ErrorNull(c, fmt.Sprintf("%v文件格式错误，ext：%v%v", ext, buf[0], buf[1]))
-				}
-			}*/
+			log.Println(paths)
 
-			path := GetPath(auth, dir, filename, "", loginInfo)
-
-			log.Println(path)
-
-			tempPath := path + ".part"
+			tempPath := paths + ".part"
 			exists, _ := utils.PathExists(tempPath)
 			var f *os.File
 			if !exists {
@@ -183,15 +168,15 @@ func PluploadFile(c echo.Context) error {
 			if _, err = f.Write(buf); err != nil {
 				panic(err)
 			}
-			f.Close()
+			_ = f.Close()
 
 			if chunks == 0 || chunk == chunks-1 {
-				os.Rename(path+".part", path)
+				_ = os.Rename(paths+".part", paths)
 				fileLogID := utils.ID()
 				err = global.DB.Create(&model.FileLog{
 					ID:        fileLogID,
 					Name:      filename,
-					Path:      path,
+					Path:      paths,
 					Size:      fileHeader.Size,
 					Ext:       ext,
 					IP:        c.RealIP(),
@@ -200,14 +185,14 @@ func PluploadFile(c echo.Context) error {
 				if err != nil {
 					global.Log.Error(fmt.Sprintf("保存上传文件日志失败，ERROR：%s", err.Error()))
 				}
-				path = fmt.Sprintf("/%s", path)
+				paths = fmt.Sprintf("/%s", paths)
 				result[filename] = map[string]interface{}{
-					"id":   fileLogID,
-					"size": fileHeader.Size,
-					"path": path,
-					"url":  getUrl(path),
-					"name": filename,
-					"ext":  ext,
+					"id":    fileLogID,
+					"size":  fileHeader.Size,
+					"paths": paths,
+					"url":   getUrl(paths),
+					"name":  filename,
+					"ext":   ext,
 				}
 			}
 		}
@@ -233,7 +218,7 @@ func getUrl(path string) string {
 	}
 }
 
-// 项目文件数据删除
+// 文件数据删除
 func DelFileLog(c echo.Context) error {
 	loginInfo := global.GetLoginInfo(c)
 	id := c.FormValue("id")

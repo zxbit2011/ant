@@ -26,11 +26,18 @@ var (
 	RD *config.RedisConnPool
 	//Session
 	Session = func(c echo.Context) *config.USession { return config.GetSession(c) }
-	//Secret
-	Secret           = []byte("5eF6Xj8z#pZxBOkavlcPq^MmC09*S*!8!8Jor8V7*m0F3*zWReV%o3taoH%DI@ni")
-	VerificationCode = "VerificationCode"
-
+	//图形验证码
 	GifCaptcha = gifCaptcha.New()
+	//Secret
+	Secret = []byte("5eF6Xwez#pZxBOkavlcPq^MmC09*S*!8!bJor8V7*m0F3*zWReV%oaaaoH%DI@ni")
+	//验证码session标记
+	VerificationCode = "_VerificationCode"
+	//登录cookie名称
+	TokenName = "_token"
+	//资源缓存标记
+	CacheResourceAllFlag = "_cacheResourceAllFlag"
+	//登录信息缓存标记
+	LoginInfoName = "_loginInfo"
 )
 
 const (
@@ -44,9 +51,6 @@ const (
 	//登录失败提示
 	AuthErrorMsg          = "登陆失败，请重新登陆"
 	AuthLoginInfoErrorMsg = "获取登录信息失败"
-	//登录cookie名称
-	TokenName     = "zm_token"
-	LoginInfoName = "loginInfo"
 )
 
 //ConfPath 配置文件路径
@@ -76,6 +80,10 @@ func InitGlobal(confPath *ConfPath) (err error) {
 	}
 	Log = config.InitLog(Conf.Log)
 	GifCaptcha.SetFrontColor(color.Black, color.RGBA{255, 0, 0, 255}, color.RGBA{0, 0, 255, 255}, color.RGBA{0, 153, 0, 255})
+	VerificationCode = Conf.Project.Name + VerificationCode
+	TokenName = Conf.Project.Name + TokenName
+	CacheResourceAllFlag = Conf.Project.Name + CacheResourceAllFlag
+	LoginInfoName = Conf.Project.Name + LoginInfoName
 	return
 }
 
@@ -88,9 +96,10 @@ func GetLoginInfo(c echo.Context) model.SysUserLoginInfo {
 单点登录的唯一标记格式
 */
 func GetSysUserLoginFlag(id string) string {
-	return fmt.Sprintf("sys_user_login_token_%s", id)
+	return fmt.Sprintf("%s_flag_%s", LoginInfoName, id)
 }
 
+// cookie 方式验证静态文件
 var TokenCookieFlag = map[string]bool{
 	"/files/*/auth/*": true,
 }
@@ -140,6 +149,7 @@ func GetSysUserLoginInfo(tokenStr string) (loginInfo model.SysUserLoginInfo, err
 	return
 }
 
+// QueryRows 获取[]map[string]interface{}
 func QueryRows(db *gorm.DB, sqlStr string, val ...interface{}) (list []map[string]interface{}, err error) {
 	var rows *sql.Rows
 	rows, err = db.Raw(sqlStr, val...).Rows()
